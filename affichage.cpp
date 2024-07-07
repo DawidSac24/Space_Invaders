@@ -1,3 +1,4 @@
+#include "wiring_digital.h"
 #include "global.h"
 
 Affichage::Affichage() {
@@ -86,8 +87,71 @@ void Affichage::ennemi() {
 
 void Affichage::tir() {
   display.drawLine(pos_joueur, 10, pos_joueur, 127, SH110X_WHITE);
-  if (pos_joueur < pos_ennemi - 5 && pos_joueur > pos_ennemi + 5)
+  munitions--;
+  if (pos_joueur > pos_ennemi - 5 && pos_joueur < pos_ennemi + 5) {
     display.fillCircle(pos_ennemi, 122, 5, SH110X_WHITE);
+    vies_ennemi--;
+    if (vies_ennemi == 0) {
+      nombre_ennemi--;
+      vies_ennemi = 2;
+      if (nombre_ennemi == 0)
+        fin();
+    }
+    score++;
+  }
+  stats();
+  if (munitions == 0)
+    fin();
+}
+
+void Affichage::stats() {
+  Serial.println("JOUEUR :");
+  Serial.print("vies =");
+  Serial.println(vies_joueur);
+  Serial.print("munitions = ");
+  Serial.println(munitions);
+  Serial.println("ENNEMIS :");
+  Serial.print("vies = ");
+  Serial.println(vies_ennemi);
+  Serial.print("ennemis restants = ");
+  Serial.println(nombre_ennemi);
+  Serial.print("SCORE : ");
+  Serial.println(score);
+  Serial.println("-------------------------------------------------------------");
+}
+
+void Affichage::fin() {
+  Serial.println("GAME OVER !");
+  Serial.println("-------------------------------------------------------------");
+  stats();
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SH110X_WHITE);
+  display.setRotation(1);
+  display.setCursor(15, 10);
+
+  if (munitions == 0 || vies_joueur == 0)
+    display.print("GAME OVER");
+  if (nombre_ennemi == 0) {
+    display.print("YOU WON !");
+  }
+  display.setCursor(15, 30);
+  display.print("SCORE : ");
+  display.print(score);
+  pos_joueur = 16;
+  pos_ennemi = 48;
+  dep_ennemi = true;
+  vies_joueur = 5;
+  vies_ennemi = 2;
+  nombre_ennemi = 5;
+  munitions = 250;
+  sequance = MENU;
+  logo();
+  display.setRotation(1);
+  display.setCursor(40, 55);
+  display.print("press A");
+  display.display();
+  while (digitalRead(BP_A)) {}
 }
 
 void Affichage::logo() {

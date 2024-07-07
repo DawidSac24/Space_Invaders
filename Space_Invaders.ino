@@ -1,16 +1,18 @@
 #include "global.h"
 
-unsigned long t = 0;  //le temps de tir
-
-byte sequance;
+byte sequance = 1;
 byte choix_menu = 1;
 byte skin;
+int score;
+unsigned long temps_tir;  //le temps de tir
 
 Adafruit_SH1107 display = Adafruit_SH1107(64, 128, &Wire);
 
 Affichage affichage;
 
 void setup() {
+  Serial.begin(9600);  //   Initialise the Serial port at 2400 baud.
+  while (!Serial) {}
   display.begin(0x3C, true);
   display.clearDisplay();
 
@@ -22,7 +24,7 @@ void setup() {
   // attachInterrupt(digitalPinToInterrupt(BP_C), bp_c, FALLING);
   pinMode(LED, OUTPUT);
 
-  t = millis();  // implementation du temps de tir
+  temps_tir = millis();  // implementation du temps de tir
 
   display.setTextSize(1.5);  // le chargement
   display.setTextColor(SH110X_WHITE);
@@ -36,7 +38,7 @@ void setup() {
   affichage.logo();
   display.display();
 
-  delay(2000);
+  // delay(2000);
   display.clearDisplay();
 }
 
@@ -79,8 +81,12 @@ void loop() {
       if (!digitalRead(BP_A))
         affichage.joueur(1);
 
-      if (!digitalRead(BP_B))
-        affichage.tir();
+      if (!digitalRead(BP_B)) {
+        if (millis() > temps_tir + 150) {
+          affichage.tir();
+          temps_tir = millis();
+        }
+      }
 
       if (!digitalRead(BP_C))
         affichage.joueur(-1);

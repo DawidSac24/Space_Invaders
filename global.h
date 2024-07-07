@@ -25,11 +25,10 @@
 // DEFINITION DES DIFFICULTES CHOISIES
 #define EASY 0
 
-extern unsigned long t;  //le temps de tir
-
 extern byte sequance;
 extern byte choix_menu;
 extern byte skin;
+extern int score;
 
 extern Adafruit_SH1107 display;
 
@@ -41,8 +40,11 @@ private:
 
   byte pos_joueur = 16;
   byte pos_ennemi = 48;
-
   bool dep_ennemi = true;
+  byte vies_joueur = 5;
+  byte vies_ennemi = 2;
+  byte nombre_ennemi = 5;
+  int munitions = 250;
 
 public:
   Affichage();
@@ -50,6 +52,8 @@ public:
   void joueur(int dep);
   void ennemi();
   void tir();
+  void stats();
+  void fin();
   void logo();
 };
 
