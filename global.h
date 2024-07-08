@@ -14,47 +14,55 @@
 
 // DEFINITION DES SEQUANCES
 #define MENU 0
-#define NORMAL 1
+#define CLASSIC 1
 #define VS 2
-#define SURVIVAL 3
-#define SETTINGS 4
+#define SKIN 3
+#define DIFFICULTY 4
 
 // DEFINITION DES SKINS
 #define DEFAULT 0
 
 // DEFINITION DES DIFFICULTES CHOISIES
-#define EASY 0
+#define EASY 1
+#define NORMAL 2
+#define HARD 3
 
 extern byte sequance;
 extern byte choix_menu;
-extern byte skin;
+extern byte choix_diff;
+extern byte skin_joueur;
+extern byte skin_ennemi;
 extern int score;
 
 extern Adafruit_SH1107 display;
 
-class Affichage {
+class MyDispaly {
 private:
-  String choix_0;
-  String choix_1;
-  String choix_2;
-
-  byte pos_joueur = 16;
-  byte pos_ennemi = 48;
-  bool dep_ennemi = true;
-  byte vies_joueur = 5;
-  byte vies_ennemi = 2;
-  byte nombre_ennemi = 5;
-  int munitions = 250;
-
+  String choice_0;
+  String choice_1;
+  String choice_2;
 public:
-  Affichage();
-  void menu(int choix_menu);
-  void joueur(int dep);
-  void ennemi();
-  void tir();
+  MyDispaly();
+  void menu(byte sequance, byte choice);
   void stats();
-  void fin();
+  void end();
   void logo();
+};
+
+class Player {
+private:
+public:
+  Player();
+  void move(int movement);
+  void shoot();
+};
+
+class Ennemy {
+private:
+public:
+  Ennemy();
+  void move();
+  void shoot();
 };
 
 #endif
